@@ -1,0 +1,2 @@
+Why JWT makes the server stateless?
+“JWT makes server stateless because authentication data is stored inside the token on the client side. Each request carries the token, and any server instance can verify it using the secret key. So the server does not need to store session data in memory.”

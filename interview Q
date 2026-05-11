@@ -1,0 +1,113 @@
+Q1. Why password is NOT stored in JWT?
+👉 Because JWT is readable on client side; password must stay server-only.
+
+Q2. Why we still query DB after verifying token?
+👉 Because token proves identity, DB proves user still exists / is valid.
+
+Q3. What breaks if middleware is removed?
+👉 Anyone can access protected routes without login.
+
+Q4. 401 vs 403?
+👉 401 = not logged in, 403 = logged in but not allowed.
+
+If you fail any → that’s normal. Revisit code.
+
+
+
+user.controller.js
+
+❌ Your version: “user logic register”
+✅ Correct:
+
+Handles user-related business logic (register, login).
+Routes only forward requests, controllers decide what happens.
+
+generateToken.js
+
+❌ Your version: “create token of userid”
+✅ Correct:
+
+Creates a signed JWT that stores only the user’s ID, nothing else.
+
+Key word: signed (tamper-proof).
+
+auth.middleware.js
+
+❌ Your version: “protect pages authorized hai ya nhi”
+✅ Correct:
+
+Runs before controllers, verifies JWT, fetches user from DB, and attaches it to req.user.
+
+Middleware = gatekeeper.
+
+note.controller.js
+
+❌ Your version: too vague
+✅ Correct:
+
+Contains note business logic and enforces ownership using req.user._id.
+
+Important word you missed: ownership.
+
+note.routes.js
+
+❌ Your version: “connect routers”
+✅ Correct:
+
+Maps HTTP methods + URLs to controller functions and applies middleware.
+
+Routes = wiring, not logic.
+
+2️⃣ Question answers — mostly right, but tighten them
+Q1. Why password is NOT stored in JWT?
+
+❌ “JWT readable on client”
+✅ Correct:
+
+JWT is stored on client and sent with every request.
+Storing password would leak credentials if token is compromised.
+
+Q2. Why we still query DB after verifying token?
+
+❌ “check user existing or not” (too weak)
+✅ Correct:
+
+Because token only proves identity, not current validity.
+User may be deleted, blocked, or role-changed.
+
+This is VERY important. Seniors judge this answer.
+
+Q3. What breaks if middleware is removed?
+
+✅ Your answer is correct 👍
+Add this:
+
+req.user becomes undefined → ownership checks break → security collapse.
+
+Q4. 401 vs 403?
+
+✅ Correct. Good.
+
+3️⃣ One-sentence definitions — corrected
+
+Read and replace yours with these:
+
+JWT
+
+A signed token that proves user identity without storing session on server.
+
+Auth middleware
+
+Code that verifies identity before request reaches controller.
+
+bcrypt
+
+A one-way hashing algorithm to safely store passwords.
+
+req.user
+❌ “userid is requested”
+✅
+
+The authenticated user object attached by middleware.
+
+This req.user thing is the center of confusion for you. So next section carefully.

@@ -1,0 +1,94 @@
+🔥 Correct Architecture Explanation (How a Pro Speaks)
+1️⃣ Application Flow
+
+When a request comes:
+
+Client → Route → Middleware → Controller → Model → Database → Response
+
+That is the lifecycle.
+
+🧠 Register Flow (Refined Version)
+
+Client sends:
+
+POST /user/register
+
+Steps:
+
+Route receives request
+
+Validation middleware checks input
+
+Controller:
+
+Check if email already exists
+
+Hash password using bcrypt
+
+Create user in database
+
+Send 201 response
+
+Important:
+Password is never returned because schema has select: false.
+
+That is professional explanation.
+
+🧠 Login Flow (Refined)
+
+Client sends:
+
+POST /user/login
+
+Steps:
+
+Validate input
+
+Find user by email (explicitly select password)
+
+Compare hashed password using bcrypt
+
+If valid → generate JWT
+
+Send token + user info
+
+JWT is stored on client side.
+
+Server remains stateless.
+
+🧠 Protected Route Flow
+
+Client sends request with:
+
+Authorization: Bearer <token>
+
+Steps:
+
+Middleware extracts token
+
+Verify token using secret
+
+Decode user ID
+
+Fetch user from DB
+
+Attach user to req.user
+
+Allow controller to execute
+
+If token invalid → 401.
+
+🥊 Now Strict Correction
+
+You said:
+
+token will be check verify is in client side or not
+
+Wrong.
+
+Server verifies token.
+Client just stores it.
+
+This confusion means understanding is 70%, not 100%.
+
+Good — now fixed.
